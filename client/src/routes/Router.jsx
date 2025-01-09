@@ -3,6 +3,7 @@ import MainLayout from "../layouts/Main";
 import Home from "../pages/Home/index";
 import Shop from "../pages/Shop/index";
 import Cart from "../pages/Cart/index";
+import Testimonials_v_Oxe from "../pages/Home/Testimonials_v_Oxe";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path: "/Testimonials",
+        element: <Testimonials_v_Oxe />,
       },
     ],
   },
