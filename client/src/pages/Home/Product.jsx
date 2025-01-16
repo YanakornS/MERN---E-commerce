@@ -40,7 +40,7 @@ const Product = () => {
     slidesToScroll: 3,
     initialSlide: 1,
     nexArrow: <SampleNextArrow />,
-    PrevArrow: <SamplePrevArrow />,
+    prevArrow: <SamplePrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -78,7 +78,7 @@ const Product = () => {
       <div className="md:absolute right-3 top-8 mb-10 md:24 space-x-2">
         <button
           className="btn bg-red p-2 rounded-full h-12 w-10 mt-5 text-white"
-          onClick={() => slider?.current?.slckPrev()}
+          onClick={() => slider?.current?.slickPrev()}
         >
           &lt;
         </button>
