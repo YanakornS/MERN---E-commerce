@@ -1,4 +1,5 @@
 // Your web app's Firebase configuration
+
 const apiKey = process.env.apiKey;
 const firebaseConfig = {
   apiKey: apiKey,

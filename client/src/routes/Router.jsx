@@ -4,6 +4,10 @@ import Home from "../pages/Home/index";
 import Shop from "../pages/Shop/index";
 import Cart from "../pages/Cart/index";
 import Testimonials_v_Oxe from "../pages/Home/Testimonials_v_Oxe";
+import SignIn from "../components/SignIn";
+import SignUp from "../components/SignUp";
+import UpdateProfile from "../components/UpdateProfile";
+import Profile from "../pages/Profile/Index";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +29,22 @@ const router = createBrowserRouter([
       {
         path: "/Testimonials",
         element: <Testimonials_v_Oxe />,
+      },
+      {
+        path: "/signin",
+        element: <SignIn />,
+      },
+      {
+        path: "/signup",
+        element: <SignUp />,
+      },
+      {
+        path: "/UpdateProfile",
+        element: <UpdateProfile />,
+      },
+      {
+        path: "/Profile",
+        element: <Profile />,
       },
     ],
   },

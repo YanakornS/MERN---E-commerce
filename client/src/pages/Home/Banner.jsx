@@ -4,7 +4,7 @@ import ProductItem from "../../components/ProductItem";
 const Banner = () => {
   return (
     <div className="section-container bg-gradient-to-r from-[#b0a8b9] from-0% to-[#FCFCFC] to-100%">
-      <div className="py-24 flex flex-col md:flex-row-reverse justify-beyween items-center">
+      <div className="py-24 flex flex-col md:flex-row-reverse justify-between items-center">
         <div className="md:w-1/2">
           <img src="/images/home/banner.png" alt="" />
           <div className="flex flex-col md:flex-row item-center justify-around -mt-16 gap-4">

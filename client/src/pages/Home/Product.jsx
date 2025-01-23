@@ -36,7 +36,7 @@ const Product = () => {
     const fetchData = async () => {
       const response = await ProductService.getAllProducts();
       const data = response.data;
-      const special = data.filter((item) => item.category === "clothing");
+      const special = data.filter((item) => item.category === "gadget");
 
       setProducts(special);
     };
