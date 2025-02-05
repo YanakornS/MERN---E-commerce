@@ -60,7 +60,7 @@ const doc = {
   }, // by default: empty object
 };
 
-const outputFile = "./swagger-output.json";
+const outputFile = "./docs/swagger-output.json";
 const routes = ["./index.js"];
 
 /* NOTE: If you are using the express Router, you must pass in the 'routes' only the 

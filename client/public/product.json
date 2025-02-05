@@ -1,6 +1,5 @@
 [
   {
-    "_id": "1",
     "name": "Coding Keyboard",
     "description": "Mechanical Keyboard optimized for Coding with customizable keycaps",
     "price": 3500,
@@ -8,7 +7,6 @@
     "category": "gadget"
   },
   {
-    "_id": "2",
     "name": "Wireless Mouse",
     "description": "Ergonomic wireless mouse with adjustable DPI",
     "price": 1200,
@@ -16,7 +14,6 @@
     "category": "gadget"
   },
   {
-    "_id": "3",
     "name": "Gaming Headset",
     "description": "Noise-canceling gaming headset with surround sound",
     "price": 4500,
@@ -24,7 +21,6 @@
     "category": "gadget"
   },
   {
-    "_id": "4",
     "name": "Laptop Stand",
     "description": "Adjustable aluminum laptop stand for better ergonomics",
     "price": 1500,
@@ -32,7 +28,6 @@
     "category": "gadget"
   },
   {
-    "_id": "5",
     "name": "Smartphone Charger",
     "description": "Fast charging cable for all devices",
     "price": 300,
@@ -40,7 +35,6 @@
     "category": "gadget"
   },
   {
-    "_id": "6",
     "name": "T-shirt - Tech Edition",
     "description": "Comfortable cotton T-shirt with tech logo",
     "price": 800,
@@ -48,7 +42,6 @@
     "category": "clothing"
   },
   {
-    "_id": "7",
     "name": "Tech Hoodie",
     "description": "Hoodie with a cool tech print, perfect for casual wear",
     "price": 1500,
@@ -56,7 +49,6 @@
     "category": "clothing"
   },
   {
-    "_id": "8",
     "name": "Smartwatch",
     "description": "Smartwatch with fitness tracking and notifications",
     "price": 4000,
@@ -64,7 +56,6 @@
     "category": "accessories"
   },
   {
-    "_id": "9",
     "name": "Laptop Sleeve",
     "description": "Protective sleeve for 15-inch laptops, water-resistant",
     "price": 700,
@@ -72,7 +63,6 @@
     "category": "accessories"
   },
   {
-    "_id": "10",
     "name": "Wireless Earbuds",
     "description": "Compact and high-quality wireless earbuds with noise cancellation",
     "price": 2500,
@@ -80,7 +70,6 @@
     "category": "accessories"
   },
   {
-    "_id": "11",
     "name": "Tech Backpack",
     "description": "Spacious backpack with compartments for tech gadgets",
     "price": 2200,
@@ -88,7 +77,6 @@
     "category": "accessories"
   },
   {
-    "_id": "12",
     "name": "Gamer's Socks",
     "description": "Comfortable socks designed for long gaming sessions",
     "price": 300,
@@ -96,7 +84,6 @@
     "category": "clothing"
   },
   {
-    "_id": "13",
     "name": "VR Gloves",
     "description": "Gloves designed for immersive VR experiences",
     "price": 6000,
@@ -104,7 +91,6 @@
     "category": "gadget"
   },
   {
-    "_id": "14",
     "name": "Gaming Chair",
     "description": "Ergonomic chair designed for gaming comfort",
     "price": 12000,
@@ -112,7 +98,6 @@
     "category": "gadget"
   },
   {
-    "_id": "15",
     "name": "Blue Light Glasses",
     "description": "Glasses that reduce eye strain from screens",
     "price": 1200,
@@ -120,7 +105,6 @@
     "category": "accessories"
   },
   {
-    "_id": "16",
     "name": "Tech T-shirt",
     "description": "Casual T-shirt with a minimalist tech-inspired design",
     "price": 700,
@@ -128,7 +112,6 @@
     "category": "clothing"
   },
   {
-    "_id": "17",
     "name": "Portable Speaker",
     "description": "Bluetooth portable speaker with great sound quality",
     "price": 2500,
@@ -136,7 +119,6 @@
     "category": "gadget"
   },
   {
-    "_id": "18",
     "name": "Smart Ring",
     "description": "A smart ring that tracks fitness and provides notifications",
     "price": 3200,
@@ -144,7 +126,6 @@
     "category": "accessories"
   },
   {
-    "_id": "19",
     "name": "Tech Mug",
     "description": "Mug with a tech-inspired design",
     "price": 300,
@@ -152,7 +133,6 @@
     "category": "swag"
   },
   {
-    "_id": "20",
     "name": "Sticker Pack - Coding",
     "description": "Sticker pack with coding-related designs",
     "price": 200,
@@ -160,7 +140,6 @@
     "category": "swag"
   },
   {
-    "_id": "21",
     "name": "Laptop Stickers",
     "description": "Colorful laptop stickers with tech and coding themes",
     "price": 150,
@@ -168,7 +147,6 @@
     "category": "swag"
   },
   {
-    "_id": "22",
     "name": "Tech Cap",
     "description": "Stylish cap with a tech logo embroidered",
     "price": 600,
@@ -176,7 +154,6 @@
     "category": "swag"
   },
   {
-    "_id": "23",
     "name": "Tech Water Bottle",
     "description": "Insulated water bottle with a sleek tech design",
     "price": 800,
@@ -184,7 +161,6 @@
     "category": "swag"
   },
   {
-    "_id": "24",
     "name": "Cyberpunk Hoodie",
     "description": "Hoodie with a futuristic cyberpunk design",
     "price": 1800,
@@ -192,7 +168,6 @@
     "category": "clothing"
   },
   {
-    "_id": "25",
     "name": "RGB Mousepad",
     "description": "Large RGB mousepad with customizable lighting",
     "price": 1200,

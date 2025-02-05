@@ -6,7 +6,8 @@ const PORT = process.env.PORT || 5000;
 const BASE_URL = process.env.BASE_URL;
 const DB_URL = process.env.DB_URL;
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./swagger-output.json");
+const cartRouter = require("./routers/cart.router");
+const swaggerDocument = require("./docs/swagger-output.json");
 //const userRouter = require("./routers/user.router");
 const productRouter = require("./routers/product.router");
 const path = require("path");
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 //Use Router
 //app.use("/api/v1", userRouter);
 app.use("/api/v1/product", productRouter);
+app.use("/api/v1/cart", cartRouter);
 
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
