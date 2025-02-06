@@ -8,7 +8,6 @@ import { AuthContext } from "../../context/AuthContext";
 const Index = () => {
   const [cart, refetch] = useCart();
   const { user } = useContext(AuthContext);
-
   const handleClearCart = async () => {
     Swal.fire({
       icon: "warning",
@@ -19,10 +18,6 @@ const Index = () => {
       confirmButtonColor: "#3085d6",
       showConfirmButton: true,
       confirmButtonText: "Yes, clear it!",
-      iconHtml: '<img src="path/to/trash-icon.svg" width="40" height="40" />', // Add a custom trash icon
-      customClass: {
-        popup: "sweetalert-popup", // Add a custom class for styling
-      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -47,7 +42,6 @@ const Index = () => {
       }
     });
   };
-
   const handleDeleteItem = async (cartItem) => {
     Swal.fire({
       icon: "warning",
@@ -58,11 +52,6 @@ const Index = () => {
       confirmButtonColor: "#3085d6",
       showConfirmButton: true,
       confirmButtonText: "Yes, delete it!",
-      iconHtml:
-        '<img src="path/to/small-trash-icon.svg" width="30" height="30" />', // Custom small trash icon
-      customClass: {
-        popup: "sweetalert-popup", // Same custom class for styling
-      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -87,7 +76,8 @@ const Index = () => {
       }
     });
   };
-
+  const handleIncrease = async () => {};
+  const handleDecrease = async () => {};
   return (
     <div>
       <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
@@ -103,6 +93,7 @@ const Index = () => {
         {cart.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="table">
+              {/* head */}
               <thead className="bg-red text-white rounded-sm text-center">
                 <tr>
                   <th>#</th>
@@ -122,6 +113,7 @@ const Index = () => {
                 </tr>
               </thead>
               <tbody>
+                {/* row 1 */}
                 {cart.length > 0 &&
                   cart.map((cartItem, index) => (
                     <tr key={index}>
@@ -129,6 +121,7 @@ const Index = () => {
                       <td>
                         <div className="avatar">
                           <div className="mask mask-squircle h-12 w-12">
+                            {" "}
                             <img
                               src={cartItem.image}
                               alt="Avatar Tailwind CSS Component"
@@ -166,12 +159,13 @@ const Index = () => {
                       </td>
                       <td className="text-center">
                         <button onClick={() => handleDeleteItem(cartItem)}>
-                          <FaTrash className="text-xl text-red-500 hover:text-red-700 transition-all duration-300" />
+                          <FaTrash />
                         </button>
                       </td>
                     </tr>
                   ))}
               </tbody>
+              {/* foot */}
               <tfoot>
                 <tr className="bg-red text-white rounded-sm text-center">
                   <th>#</th>
