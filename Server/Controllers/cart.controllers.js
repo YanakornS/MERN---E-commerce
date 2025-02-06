@@ -73,7 +73,7 @@ exports.getCartItemsByEmail = async (req, res) => {
 
     if (!cartItems || cartItems.length === 0) {
       return res
-        .status(404)
+        .status(200)
         .json({ message: "No cart items found for this user" });
     }
 
@@ -116,7 +116,7 @@ exports.deleteCartItem = async (req, res) => {
   try {
     const deletedCartItem = await CartModel.findByIdAndDelete(id);
     if (!deletedCartItem) {
-      return res.status(404).json({ message: "Cart item not found" });
+      return res.status(200).json({ message: "Cart item not found" });
     }
     res.status(200).json({ message: "Cart item deleted successfully" });
   } catch (error) {
