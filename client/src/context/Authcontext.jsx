@@ -17,6 +17,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth(app);
 
   const createUser = (email, password) => {
@@ -77,6 +78,7 @@ const AuthProvider = ({ children }) => {
     createUser,
     login,
     logout,
+    isLoading,
     signUpWithGoogle,
     signUpWithGithub,
     signUpWithFacebook,
@@ -86,6 +88,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser || null);
+      setIsLoading(false);
     });
     return () => {
       return unsubscribe();

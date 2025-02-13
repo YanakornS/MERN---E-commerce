@@ -8,6 +8,7 @@ import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
 import UpdateProfile from "../components/UpdateProfile";
 import Profile from "../pages/Profile/Index";
+import ProtectPage from "../pages/ProtectPage/index";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/cart",
-        element: <Cart />,
+        element: (
+          <ProtectPage>
+            <Cart />
+          </ProtectPage>
+        ),
       },
       {
         path: "/Testimonials",
@@ -40,15 +45,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/UpdateProfile",
-        element: <UpdateProfile />,
+        element: (
+          <ProtectPage>
+            <UpdateProfile />
+          </ProtectPage>
+        ),
       },
       {
         path: "/Profile",
-        element: <Profile />,
-      },
-      {
-        path: "/Carts",
-        element: <Cart />,
+        element: (
+          <ProtectPage>
+            <Profile />
+          </ProtectPage>
+        ),
       },
     ],
   },

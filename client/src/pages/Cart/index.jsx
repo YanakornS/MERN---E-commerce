@@ -8,6 +8,13 @@ import { AuthContext } from "../../context/AuthContext";
 const Index = () => {
   const [cart, refetch] = useCart();
   const { user } = useContext(AuthContext);
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("th-TH", {
+      style: "currency",
+      currency: "THB",
+    }).format(price);
+  };
+
   const handleClearCart = async () => {
     Swal.fire({
       icon: "warning",
@@ -16,7 +23,6 @@ const Index = () => {
       showCancelButton: true,
       cancelButtonColor: "#d33",
       confirmButtonColor: "#3085d6",
-      showConfirmButton: true,
       confirmButtonText: "Yes, clear it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -27,7 +33,6 @@ const Index = () => {
             Swal.fire({
               icon: "success",
               title: "Shopping Cart Cleared!",
-              text: response.message,
               timer: 1500,
               showConfirmButton: false,
             });
@@ -42,6 +47,7 @@ const Index = () => {
       }
     });
   };
+
   const handleDeleteItem = async (cartItem) => {
     Swal.fire({
       icon: "warning",
@@ -50,7 +56,6 @@ const Index = () => {
       showCancelButton: true,
       cancelButtonColor: "#d33",
       confirmButtonColor: "#3085d6",
-      showConfirmButton: true,
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -61,7 +66,6 @@ const Index = () => {
             Swal.fire({
               icon: "success",
               title: "Deleted!",
-              text: response.message,
               timer: 1500,
               showConfirmButton: false,
             });
@@ -76,15 +80,73 @@ const Index = () => {
       }
     });
   };
-  const handleIncrease = async () => {};
-  const handleDecrease = async () => {};
+
+  const handleIncrease = async (cartItem) => {
+    if (cartItem.quantity + 1 > 10) {
+      Swal.fire({
+        icon: "warning",
+        title: "Maximum quantity reached!",
+        text: "You can only add up to 10 items.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+      return;
+    }
+    try {
+      const response = await CartService.updateCartItem(cartItem._id, {
+        quantity: cartItem.quantity + 1,
+      });
+      if (response.status === 200) {
+        refetch();
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message,
+      });
+    }
+  };
+
+  const handleDecrease = async (cartItem) => {
+    if (cartItem.quantity > 1) {
+      try {
+        const response = await CartService.updateCartItem(cartItem._id, {
+          quantity: cartItem.quantity - 1,
+        });
+        if (response.status === 200) {
+          refetch();
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message,
+        });
+      }
+    } else {
+      handleDeleteItem(cartItem);
+    }
+  };
+
+  let totalPrice = 0;
+
+  if (cart && cart.length > 0) {
+    cart.forEach((item) => {
+      totalPrice += item.quantity * item.price;
+    });
+  }
+
+  // แปลง totalPrice เป็นสกุลเงินไทย (THB)
+  const formattedTotalPrice = formatPrice(totalPrice);
+
   return (
     <div>
       <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
-        <div className="bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%">
+        <div className="bg-gradient-to-r from-[#FAFAFA] to-[#FCFCFC]">
           <div className="py-28 flex flex-col items-center justify-center">
             <div className="text-center px-4 space-y-7">
-              <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
+              <h2 className="md:text-5xl text-4xl font-bold">
                 Items Added to The <span className="text-red">Cart</span>
               </h2>
             </div>
@@ -93,8 +155,7 @@ const Index = () => {
         {cart.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="table">
-              {/* head */}
-              <thead className="bg-red text-white rounded-sm text-center">
+              <thead className="bg-red text-white text-center">
                 <tr>
                   <th>#</th>
                   <th>Product</th>
@@ -113,61 +174,50 @@ const Index = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* row 1 */}
-                {cart.length > 0 &&
-                  cart.map((cartItem, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>
-                        <div className="avatar">
-                          <div className="mask mask-squircle h-12 w-12">
-                            {" "}
-                            <img
-                              src={cartItem.image}
-                              alt="Avatar Tailwind CSS Component"
-                            />
-                          </div>
+                {cart.map((cartItem, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <div className="avatar">
+                        <div className="mask mask-squircle h-12 w-12">
+                          <img src={cartItem.image} alt={cartItem.name} />
                         </div>
-                      </td>
-                      <td>
-                        <div className="flex items-center gap-3">
-                          <div>
-                            <div className="font-bold">{cartItem.name}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div className="space-x-6 text-center">
-                          <button
-                            className="btn btn-xs mr-6"
-                            onClick={handleDecrease}
-                          >
-                            -
-                          </button>
-                          {cartItem.quantity}
-                          <button
-                            className="btn btn-xs mr-2"
-                            onClick={handleIncrease}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </td>
-                      <td className="text-center">{cartItem.price}</td>
-                      <td className="text-center">
-                        {cartItem.quantity * cartItem.price}
-                      </td>
-                      <td className="text-center">
-                        <button onClick={() => handleDeleteItem(cartItem)}>
-                          <FaTrash />
+                      </div>
+                    </td>
+                    <td className="font-bold">{cartItem.name}</td>
+                    <td>
+                      <div className="space-x-6 text-center">
+                        <button
+                          className="btn btn-xs mr-6"
+                          onClick={() => handleDecrease(cartItem)}
+                        >
+                          -
                         </button>
-                      </td>
-                    </tr>
-                  ))}
+                        {cartItem.quantity}
+                        <button
+                          className="btn btn-xs mr-2"
+                          onClick={() => handleIncrease(cartItem)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </td>
+                    <td className="text-center">
+                      {formatPrice(cartItem.price)}
+                    </td>
+                    <td className="text-center">
+                      {formatPrice(cartItem.quantity * cartItem.price)}
+                    </td>
+                    <td className="text-center">
+                      <button onClick={() => handleDeleteItem(cartItem)}>
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
-              {/* foot */}
               <tfoot>
-                <tr className="bg-red text-white rounded-sm text-center">
+                <tr className="bg-red text-white text-center">
                   <th>#</th>
                   <th>Product</th>
                   <th>Item Name</th>
@@ -182,10 +232,37 @@ const Index = () => {
                 </tr>
               </tfoot>
             </table>
+            <div className="flex flex-col md:flex-row justify-between items-start my-12 gap-8 ">
+              <div className="md:w-1/2 space-y-3">
+                <h3 className="text-lg font-semibold">Customer Details</h3>
+                <p className="">Name : {user?.displayName}</p>
+                <p className="">Email : {user?.email}</p>
+                <p className="">UserId : {user?.uid}</p>
+              </div>
+              <div className="md:w-1/2 space-y-3">
+                <h3 className="text-lg font-semibold">Shopping Details</h3>
+                <p className="">Total Items : {cart.length}</p>
+                <p className="">Total Price : {formattedTotalPrice}</p>
+                <a
+                  href="/check-out"
+                  className="btn btn-md bg-red text-white px-8 py-1"
+                >
+                  Proceed to checkout
+                </a>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="text-xl font-bold text-center text-red">
-            Shopping cart is Empty!
+            <div className="text-xl font-bold text-center text-red">
+              Shopping cart is Empty!
+            </div>
+            <button
+              className="btn bg-red text-white rounded-full px-5 flex items-center gap-2"
+              onClick={() => window.location.replace("/shop")}
+            >
+              Continue Shopping
+            </button>
           </div>
         )}
       </div>
