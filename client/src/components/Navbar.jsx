@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import Profile from "./Profile";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import UserIcon from "./icons/UserIcon";
 import Modal from "./Modal";
+
 const Navbar = () => {
   const { user } = useContext(AuthContext);
+
   const navItem = (
     <>
       <li>
@@ -13,7 +14,7 @@ const Navbar = () => {
       </li>
       <li tabIndex={0}>
         <details>
-          <summary>Catagory</summary>
+          <summary>Category</summary>
           <ul>
             <li>
               <a href="/shop">All</a>
@@ -56,7 +57,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar fixed top-0 left-0 w-full z-50 bg-white shadow-md border-b border-gray-300 backdrop-blur-lg">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -83,13 +84,12 @@ const Navbar = () => {
           </ul>
         </div>
         <a className="btn btn-ghost text-xl" href="/">
-          {" "}
           <img
             src="/LogoShop.png"
             alt="Logo"
             className="h-6 lg:h-12 pr-1 mx-auto"
-          />{" "}
-          SE Souvenir Shop{" "}
+          />
+          SE Souvenir Shop
         </a>
       </div>
       <div className="navbar-center hidden lg:flex">

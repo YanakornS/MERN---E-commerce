@@ -31,11 +31,42 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     return signOut(auth);
   };
+/** SING UP WITH Google WebMailNpru */
+// const signUpWithGoogle = async () => {
+//   const provider = new GoogleAuthProvider();
+
+//   try {
+//     const result = await signInWithPopup(auth, provider);
+//     const email = result.user.email;
+
+//     // ตรวจสอบว่าอีเมลต้องลงท้ายด้วย @webmail.npru.ac.th เท่านั้น
+//     if (!email.endsWith("@webmail.npru.ac.th")) {
+//       await signOut(auth); // บังคับล็อกเอาต์
+//       Swal.fire({
+//         icon: "error",
+//         title: "Access Denied",
+//         text: "Only emails ending with @webmail.npru.ac.th are allowed!",
+//       });
+//       return null; // ไม่อนุญาตให้ล็อกอิน
+//     }
+
+//     setUser(result.user); // อัปเดตสถานะผู้ใช้
+//     return result.user;
+//   } catch (error) {
+//     console.error("Google Sign-In Error:", error);
+//     Swal.fire({
+//       icon: "error",
+//       title: "Login Failed",
+//       text: error.message,
+//     });
+//   }
+// };
 
   const signUpWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(auth, provider);
   };
+  
   // Sign up using Github
   const signUpWithGithub = () => {
     const provider = new GithubAuthProvider();

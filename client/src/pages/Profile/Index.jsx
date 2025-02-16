@@ -1,17 +1,19 @@
 import React, { useContext, useState, useEffect } from "react";
-import { FaGoogle, FaGithub, FaFacebook } from "react-icons/fa";
+import { FaGoogle, FaGithub, FaFacebook, FaEdit } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthContext";
 
 const Index = () => {
   const { user } = useContext(AuthContext);
   const [name, setName] = useState("");
   const [photoURL, setPhotoURL] = useState("");
+  const [email, setEmail] = useState("");
 
   // ใช้ useEffect เพื่อให้แน่ใจว่าข้อมูลของ user ได้รับการโหลดก่อน
   useEffect(() => {
     if (user) {
       setName(user.displayName || "");
       setPhotoURL(user.photoURL || "");
+      setEmail(user.email || "No email provided");
     }
   }, [user]);
 
@@ -21,7 +23,7 @@ const Index = () => {
 
   return (
     <div>
-      <div className="flex flex-col justify-center items-center h-[100vh]">
+       <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-br from-gray-100">
         <div className="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none">
           <div className="relative flex h-32 w-full justify-center rounded-xl bg-cover">
             <img
@@ -29,7 +31,7 @@ const Index = () => {
               className="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
               alt="Banner"
             />
-            <div className="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-navy-700">
+            <div className="absolute  flex h-[97px] w-[97px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-navy-700">
               <img
                 className="h-full w-full rounded-full"
                 src={photoURL} // ใช้ข้อมูลรูปโปรไฟล์จาก state
@@ -37,13 +39,13 @@ const Index = () => {
               />
             </div>
           </div>
-          <div className="mt-16 flex flex-col items-center">
-            <h4 className="text-xl font-bold text-navy-700 dark:text-white">
-              {name} {/* ใช้ชื่อจาก state */}
-            </h4>
-            <p className="text-base font-normal text-gray-600">
-              Product Manager {/* เปลี่ยนเป็นตำแหน่งจริงถ้ามี */}
-            </p>
+          {/* Profile Info */}
+          <div className="text-center mt-4">
+            <h2 className="text-2xl font-semibold text-gray-800">{name}</h2>
+            <p className="text-xl font-semibold text-gray-500">{email}</p>
+            <a href="/updateprofile" className="mt-3 bg-blue-500 text-white px-4 py-1 rounded-full flex items-center gap-2 hover:bg-blue-600 transition">
+              <FaEdit /> Edit Profile
+            </a>
           </div>
           <div className="mt-6 mb-3 flex gap-14 md:!gap-14">
             <div className="flex flex-col items-center justify-center">
@@ -65,8 +67,7 @@ const Index = () => {
               <p className="text-sm font-normal text-gray-600">Following</p>
             </div>
           </div>
-        </div>
-        <p className="font-normal text-navy-700 mt-4 mx-auto w-max">
+          <p className="font-normal text-navy-700 mt-4 mx-auto w-max">
           {/* Providers icon */}
           <div className="space-x-3 mt-3 flex justify-center items-center">
             <a
@@ -98,6 +99,8 @@ const Index = () => {
             </a>
           </div>
         </p>
+        </div>
+        
       </div>
     </div>
   );

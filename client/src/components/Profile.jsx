@@ -78,7 +78,7 @@ const Profile = () => {
           <li>
             <a href="/profile" className="justify-between">
               Profile
-              <span className="badge">New</span>
+              <span className=" text-red badge">New</span>
             </a>
           </li>
           <li>

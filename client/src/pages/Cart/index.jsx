@@ -17,13 +17,15 @@ const Index = () => {
 
   const handleClearCart = async () => {
     Swal.fire({
-      icon: "warning",
-      title: "Are you sure to clear your shopping cart?",
-      text: "You won't be able to revert this!",
+      title: "Are you sure?",
+      text: "Your shopping cart will be permanently cleared!",
       showCancelButton: true,
-      cancelButtonColor: "#d33",
-      confirmButtonColor: "#3085d6",
-      confirmButtonText: "Yes, clear it!",
+     
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      imageUrl: "https://cdn-icons-png.flaticon.com/512/3096/3096673.png", 
+      imageWidth: 70,
+      imageHeight: 70,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -31,22 +33,26 @@ const Index = () => {
           if (response.status === 200) {
             refetch();
             Swal.fire({
-              icon: "success",
-              title: "Shopping Cart Cleared!",
+              title: "Cart emptied!",
+              text: "Your shopping cart is now empty.",
               timer: 1500,
               showConfirmButton: false,
+              imageUrl: "https://cdn-icons-png.flaticon.com/512/2907/2907762.png", 
+              imageWidth: 70,
+              imageHeight: 70,
             });
           }
         } catch (error) {
           Swal.fire({
             icon: "error",
-            title: "Error",
-            text: error.message,
+            title: "Oops!",
+            text: "Something went wrong. Please try again.",
           });
         }
       }
     });
   };
+  
 
   const handleDeleteItem = async (cartItem) => {
     Swal.fire({

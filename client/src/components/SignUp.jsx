@@ -61,8 +61,8 @@ const SignUp = ({ isLogin }) => {
         .catch((err) => {
           console.error(err);
           Swal.fire({
-            title: "Registration Failed",
-            text: "An error occurred during registration.",
+             title: "Access Denied",
+          text: "Only emails ending with @webmail.npru.ac.th are allowed!",
             icon: "error",
           });
         });
@@ -86,8 +86,8 @@ const SignUp = ({ isLogin }) => {
       .catch((err) => {
         console.error(err);
         Swal.fire({
-          title: "Registration Failed",
-          text: "An error occurred during registration.",
+          title: "Access Denied",
+          text: "Only emails ending with @webmail.npru.ac.th are allowed!",
           icon: "error",
         });
       });
