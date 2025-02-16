@@ -42,11 +42,11 @@ const Index = () => {
           {/* Profile Info */}
           <div className="text-center mt-4">
             <h2 className="text-2xl font-semibold text-gray-800">{name}</h2>
-            <p className="text-xl font-semibold text-gray-500">{email}</p>
-            <a href="/updateprofile" className="mt-3 bg-blue-500 text-white px-4 py-1 rounded-full flex items-center gap-2 hover:bg-blue-600 transition">
+            <p className="text-l font-semibold text-gray-500">{email}</p>
+          </div>
+          <a href="/updateprofile" className="mt-3 bg-blue-500 text-white px-4 py-1 rounded-full flex items-center gap-2 hover:bg-blue-600 transition">
               <FaEdit /> Edit Profile
             </a>
-          </div>
           <div className="mt-6 mb-3 flex gap-14 md:!gap-14">
             <div className="flex flex-col items-center justify-center">
               <p className="text-2xl font-bold text-navy-700 dark:text-white">

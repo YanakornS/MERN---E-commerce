@@ -222,21 +222,7 @@ const Index = () => {
                   </tr>
                 ))}
               </tbody>
-              <tfoot>
-                <tr className="bg-red text-white text-center">
-                  <th>#</th>
-                  <th>Product</th>
-                  <th>Item Name</th>
-                  <th>Quantity</th>
-                  <th>Price Per Unit</th>
-                  <th>Price</th>
-                  <th>
-                    <button className="btn btn-outline btn-error">
-                      Clear Cart
-                    </button>
-                  </th>
-                </tr>
-              </tfoot>
+              
             </table>
             <div className="flex flex-col md:flex-row justify-between items-start my-12 gap-8 ">
               <div className="md:w-1/2 space-y-3">

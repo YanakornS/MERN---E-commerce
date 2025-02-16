@@ -9,7 +9,7 @@ const index = ({ children }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <h1 className="text-xl font-bold">Loading...</h1>
+      
       </div>
     );
   }
