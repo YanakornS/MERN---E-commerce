@@ -14,18 +14,19 @@ const Index = () => {
       currency: "THB",
     }).format(price);
   };
-
   const handleClearCart = async () => {
     Swal.fire({
       title: "Are you sure?",
       text: "Your shopping cart will be permanently cleared!",
       showCancelButton: true,
-     
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
-      imageUrl: "https://cdn-icons-png.flaticon.com/512/3096/3096673.png", 
+      imageUrl: "https://cdn-icons-png.flaticon.com/512/3096/3096673.png",
       imageWidth: 70,
       imageHeight: 70,
+      customClass: {
+        image: "animate-bounce",
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -37,9 +38,13 @@ const Index = () => {
               text: "Your shopping cart is now empty.",
               timer: 1500,
               showConfirmButton: false,
-              imageUrl: "https://cdn-icons-png.flaticon.com/512/2907/2907762.png", 
+              imageUrl:
+                "https://cdn-icons-png.flaticon.com/512/2907/2907762.png",
               imageWidth: 70,
               imageHeight: 70,
+              customClass: {
+                image: "animate-bounce",
+              },
             });
           }
         } catch (error) {
@@ -52,7 +57,6 @@ const Index = () => {
       }
     });
   };
-  
 
   const handleDeleteItem = async (cartItem) => {
     Swal.fire({
@@ -215,14 +219,16 @@ const Index = () => {
                       {formatPrice(cartItem.quantity * cartItem.price)}
                     </td>
                     <td className="text-center">
-                      <button onClick={() => handleDeleteItem(cartItem)}>
-                        <FaTrash />
+                      <button
+                        onClick={() => handleDeleteItem(cartItem)}
+                        className="hover:animate-bounce transition duration-300"
+                      >
+                        <FaTrash className="text-red-500 text-xl" />
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
-              
             </table>
             <div className="flex flex-col md:flex-row justify-between items-start my-12 gap-8 ">
               <div className="md:w-1/2 space-y-3">

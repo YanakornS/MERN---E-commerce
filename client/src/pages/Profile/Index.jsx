@@ -23,9 +23,9 @@ const Index = () => {
 
   return (
     <div>
-       <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-br from-gray-100">
-        <div className="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none">
-          <div className="relative flex h-32 w-full justify-center rounded-xl bg-cover">
+      <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-br  from-blue-100">
+        <div className="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto shadow-xl p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none">
+          <div className="relative flex h-32 w-full justify-center  rounded-xl bg-cover">
             <img
               src="https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/banner.ef572d78f29b0fee0a09.png"
               className="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
@@ -42,11 +42,14 @@ const Index = () => {
           {/* Profile Info */}
           <div className="text-center mt-4">
             <h2 className="text-2xl font-semibold text-gray-800">{name}</h2>
-            <p className="text-l font-semibold text-gray-500">{email}</p>
+            <p className="text-sm font-semibold text-gray-500 mt-1 ">{email}</p>
           </div>
-          <a href="/updateprofile" className="mt-3 bg-blue-500 text-white px-4 py-1 rounded-full flex items-center gap-2 hover:bg-blue-600 transition">
-              <FaEdit /> Edit Profile
-            </a>
+          <a
+            href="/updateprofile"
+            className="mt-3 bg-blue-500 text-white px-4 py-1 rounded-full flex items-center gap-2 hover:bg-blue-600 transition"
+          >
+            <FaEdit /> Edit Profile
+          </a>
           <div className="mt-6 mb-3 flex gap-14 md:!gap-14">
             <div className="flex flex-col items-center justify-center">
               <p className="text-2xl font-bold text-navy-700 dark:text-white">
@@ -68,39 +71,38 @@ const Index = () => {
             </div>
           </div>
           <p className="font-normal text-navy-700 mt-4 mx-auto w-max">
-          {/* Providers icon */}
-          <div className="space-x-3 mt-3 flex justify-center items-center">
-            <a
-              href="https://accounts.google.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <button className="btn rounded-full">
-                <FaGoogle className="size-4" />
-              </button>
-            </a>
-            <a
-              href="https://www.facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <button className="btn rounded-full">
-                <FaFacebook className="size-4" />
-              </button>
-            </a>
-            <a
-              href="https://github.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <button className="btn rounded-full">
-                <FaGithub className="size-4" />
-              </button>
-            </a>
-          </div>
-        </p>
+            {/* Providers icon */}
+            <div className="space-x-3 mt-3 flex justify-center items-center">
+              <a
+                href="https://accounts.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="btn rounded-full">
+                  <FaGoogle className="size-4" />
+                </button>
+              </a>
+              <a
+                href="https://www.facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="btn rounded-full">
+                  <FaFacebook className="size-4" />
+                </button>
+              </a>
+              <a
+                href="https://github.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="btn rounded-full">
+                  <FaGithub className="size-4" />
+                </button>
+              </a>
+            </div>
+          </p>
         </div>
-        
       </div>
     </div>
   );

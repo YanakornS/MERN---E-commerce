@@ -1,4 +1,3 @@
-
 import { createBrowserRouter } from "react-router";
 // import MainLayout from "../layouts/Main";
 // import Home from "../pages/Home/index";
@@ -10,7 +9,7 @@ import { createBrowserRouter } from "react-router";
 // import Profile from "../pages/Profile/Index";
 // import ProtectPage from "../pages/ProtectPage/index";
 
-//imporn Lazy Loding 
+//imporn Lazy Loding
 import { lazy } from "react";
 
 const Home = lazy(() => import("../pages/Home/index"));
@@ -22,9 +21,11 @@ const UpdateProfile = lazy(() => import("../components/UpdateProfile"));
 const Profile = lazy(() => import("../pages/Profile/Index"));
 const ProtectPage = lazy(() => import("../pages/ProtectPage/index"));
 const MainLayout = lazy(() => import("../layouts/Main"));
-
-
-
+const Drawer = lazy(() => import("../components/Drawer"));
+const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
+const AddProduct = lazy(() => import("../pages/Product/AddProduct"));
+const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
+const ManageItems = lazy(() => import("../pages/ManageItems/index"));
 
 const router = createBrowserRouter([
   {
@@ -71,7 +72,28 @@ const router = createBrowserRouter([
           </ProtectPage>
         ),
       },
-      
+      {
+        path: "/drawer",
+        element: <Drawer />,
+      },
+    ],
+  },
+  {
+    path: "/DashboardLayout",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "",
+        element: <Dashboard />,
+      },
+      {
+        path: "addproduct",
+        element: <AddProduct />,
+      },
+      {
+        path: "manageitem",
+        element: <ManageItems />,
+      },
     ],
   },
 ]);
