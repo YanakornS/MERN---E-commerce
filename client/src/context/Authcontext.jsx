@@ -12,67 +12,78 @@ import {
   getAuth,
   updateProfile as firebaseUpdateProfile,
 } from "firebase/auth";
+import { Cookies } from "react-cookie";
+import UserService from "../services/user.service";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const cookies = new Cookies();
   const auth = getAuth(app);
 
-  const createUser = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  const createUser = (email) => {
+    return createUserWithEmailAndPassword(auth, email);
   };
 
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
+  const getUser = () => {
+    const userInfo = cookies.get("user") || null;
+    return userInfo;
+  };
   const logout = () => {
     return signOut(auth);
   };
-/** SING UP WITH Google WebMailNpru */
-// const signUpWithGoogle = async () => {
-//   const provider = new GoogleAuthProvider();
+  /** SING UP WITH Google WebMailNpru */
+  // const signUpWithGoogle = async () => {
+  //   const provider = new GoogleAuthProvider();
 
-//   try {
-//     const result = await signInWithPopup(auth, provider);
-//     const email = result.user.email;
+  //   try {
+  //     const result = await signInWithPopup(auth, provider);
+  //     const email = result.user.email;
 
-//     // ตรวจสอบว่าอีเมลต้องลงท้ายด้วย @webmail.npru.ac.th เท่านั้น
-//     if (!email.endsWith("@webmail.npru.ac.th")) {
-//       await signOut(auth); // บังคับล็อกเอาต์
-//       Swal.fire({
-//         icon: "error",
-//         title: "Access Denied",
-//         text: "Only emails ending with @webmail.npru.ac.th are allowed!",
-//       });
-//       return null; // ไม่อนุญาตให้ล็อกอิน
-//     }
+  //     // ตรวจสอบว่าอีเมลต้องลงท้ายด้วย @webmail.npru.ac.th เท่านั้น
+  //     if (!email.endsWith("@webmail.npru.ac.th")) {
+  //       await signOut(auth); // บังคับล็อกเอาต์
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Access Denied",
+  //         text: "Only emails ending with @webmail.npru.ac.th are allowed!",
+  //       });
+  //       return null; // ไม่อนุญาตให้ล็อกอิน
+  //     }
 
-//     setUser(result.user); // อัปเดตสถานะผู้ใช้
-//     return result.user;
-//   } catch (error) {
-//     console.error("Google Sign-In Error:", error);
-//     Swal.fire({
-//       icon: "error",
-//       title: "Login Failed",
-//       text: error.message,
-//     });
-//   }
-// };
+  //     setUser(result.user); // อัปเดตสถานะผู้ใช้
+  //     return result.user;
+  //   } catch (error) {
+  //     console.error("Google Sign-In Error:", error);
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Login Failed",
+  //       text: error.message,
+  //     });
+  //   }
+  // };
 
   const signUpWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(auth, provider);
   };
-  
+
   // Sign up using Github
   const signUpWithGithub = () => {
     const provider = new GithubAuthProvider();
     return signInWithPopup(auth, provider);
   };
 
+  const getToken = (cookies) => {
+    const savedUser = cookies.get("Token");
+    return savedUser;
+  };
   // Sign up using Facebook
   const signUpWithFacebook = () => {
     const provider = new FacebookAuthProvider();
@@ -107,25 +118,39 @@ const AuthProvider = ({ children }) => {
   const authInfo = {
     user,
     createUser,
+    getUser,
     login,
     logout,
+
     isLoading,
     signUpWithGoogle,
     signUpWithGithub,
     signUpWithFacebook,
     updateProfile,
   };
-
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser || null);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        const { email } = currentUser;
+        const { data } = await UserService.signJwt(email);
+        if (data.token) {
+          cookies.set("Token", data.token);
+          cookies.set("UserInfo", data.userInfo);
+        } else {
+          cookies.remove("user");
+        }
+      } else {
+        setUser(null);
+        cookies.remove("user");
+      }
       setIsLoading(false);
     });
+
     return () => {
       return unsubscribe();
     };
   }, [auth]);
-
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );

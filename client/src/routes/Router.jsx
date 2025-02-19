@@ -26,6 +26,7 @@ const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 const AddProduct = lazy(() => import("../pages/Product/AddProduct"));
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
 const ManageItems = lazy(() => import("../pages/ManageItems/index"));
+const AdminRoute = lazy(() => import("../pages/ProtectPage/AdminRouter"));
 
 const router = createBrowserRouter([
   {
@@ -80,7 +81,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/DashboardLayout",
-    element: <DashboardLayout />,
+    element: (
+      <AdminRoute>
+        <DashboardLayout />
+      </AdminRoute>
+    ),
     children: [
       {
         path: "",

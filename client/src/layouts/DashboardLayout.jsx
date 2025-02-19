@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation, Link } from "react-router";
 import {
   FaTachometerAlt,
   FaShoppingCart,
@@ -14,6 +14,7 @@ import {
 
 const DashboardLayout = () => {
   const isAdmin = true;
+  const location = useLocation();
 
   if (!isAdmin) {
     return (
@@ -23,11 +24,55 @@ const DashboardLayout = () => {
     );
   }
 
+  const pathnames = location.pathname.split("/").filter((x) => x);
+  const breadcrumbs = (
+    <div className="breadcrumbs text-sm mb-4">
+      <ul className="flex items-center space-x-2">
+        {/* Home Icon */}
+        <li className="flex items-center">
+          <Link
+            to="/DashboardLayout"
+            className="text-blue-500 hover:underline flex items-center gap-1"
+          >
+            <FaHome className="h-4 w-4" />
+            Dashboard
+          </Link>
+        </li>
+
+        {pathnames.slice(1).map((segment, index) => {
+          const path = `/DashboardLayout/${pathnames
+            .slice(1, index + 2)
+            .join("/")}`;
+          const isLast = index === pathnames.length - 2;
+
+          return (
+            <li key={index} className="flex items-center">
+              <span className="mx-2">/</span>
+              {isLast ? (
+                <span className="text-gray-500 capitalize">{segment}</span>
+              ) : (
+                <Link
+                  to={path}
+                  className="text-blue-500 capitalize hover:underline"
+                >
+                  {segment}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col p-6">
-        {/* Page content here */}
+        {/* ✅ Breadcrumbs แสดงตำแหน่งปัจจุบัน */}
+        {breadcrumbs}
+
+        {/* ✅ เนื้อหาของแต่ละหน้า */}
         <Outlet />
       </div>
 
@@ -48,69 +93,91 @@ const DashboardLayout = () => {
           {/* Admin Links */}
           <ul className="space-y-3 text-gray-700">
             <li>
-              <a className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition">
-                <FaTachometerAlt className="text-lg" />
+              <Link
+                to="/DashboardLayout"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
+              >
+                <FaHome className="text-lg" />
                 Dashboard
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition">
+              <Link
+                to="/DashboardLayout/manageorders"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
+              >
                 <FaShoppingCart className="text-lg" />
                 Manage Orders
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/DashboardLayout/addproduct"
+              <Link
+                to="/DashboardLayout/addproduct"
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
               >
                 <FaPlus className="text-lg" />
                 Add Product
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/DashboardLayout/manageitem"
+              <Link
+                to="/DashboardLayout/manageitem"
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
               >
                 <FaList className="text-lg" />
                 Manage Item
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition">
+              <Link
+                to="/DashboardLayout/allusers"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
+              >
                 <FaUsers className="text-lg" />
                 All Users
-              </a>
+              </Link>
             </li>
           </ul>
+
           <div className="divider my-4"></div>
 
           {/* User Links */}
           <ul className="space-y-3 text-gray-700">
             <li>
-              <a className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition">
+              <Link
+                to="/"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
+              >
                 <FaHome className="text-lg" />
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition">
+              <Link
+                to="/product"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
+              >
                 <FaBox className="text-lg" />
                 Product
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition">
+              <Link
+                to="/order-tracking"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
+              >
                 <FaMapMarkedAlt className="text-lg" />
                 Order Tracking
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition">
+              <Link
+                to="/customer-support"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
+              >
                 <FaHeadset className="text-lg" />
                 Customer Support
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

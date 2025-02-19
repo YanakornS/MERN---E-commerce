@@ -8,7 +8,7 @@ const DB_URL = process.env.DB_URL;
 const swaggerUi = require("swagger-ui-express");
 const cartRouter = require("./routers/cart.router");
 const swaggerDocument = require("./docs/swagger-output.json");
-//const userRouter = require("./routers/user.router");
+const userRouter = require("./routers/user.router");
 const productRouter = require("./routers/product.router");
 const path = require("path");
 try {
@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
   res.send("<h1>Welcome  To MERN E-Commerce </h1>");
 });
 //Use Router
-//app.use("/api/v1", userRouter);
+app.use("/api/v1/user", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/cart", cartRouter);
 

@@ -4,16 +4,14 @@ import Swal from "sweetalert2";
 
 const Index = () => {
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]); // State สำหรับหมวดหมู่
   const [editProduct, setEditProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // โหลดข้อมูลสินค้าจาก API
+  //โหลดข้อมูลสินค้าจาก API
   useEffect(() => {
     fetchProducts();
-    fetchCategories();
   }, []);
 
   const fetchProducts = async () => {
@@ -25,15 +23,6 @@ const Index = () => {
       console.error("Error fetching products:", error);
     }
     setLoading(false);
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await ProductService.getCategories();
-      setCategories(response.data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
   };
 
   // ลบสินค้า
@@ -58,7 +47,6 @@ const Index = () => {
       }
     }
   };
-
   // เปิด Modal สำหรับแก้ไขสินค้า
   const handleEdit = (product) => {
     setEditProduct(product);
@@ -101,10 +89,6 @@ const Index = () => {
     } catch (error) {
       Swal.fire("Error!", "Failed to update the product.", "error");
     }
-  };
-
-  const handleCategoryChange = (e) => {
-    setEditProduct({ ...editProduct, category: e.target.value });
   };
 
   return (
@@ -202,26 +186,19 @@ const Index = () => {
               }
             />
 
-            {/* <label className="block">Category</label>
+            <label className="block">Category</label>
             <select
               className="w-full border p-2 rounded mb-3"
               value={editProduct.category}
-              onChange={handleCategoryChange}
+              onChange={(e) =>
+                setEditProduct({ ...editProduct, category: e.target.value })
+              }
             >
-              <option value="" disabled>
-                Select Category
-              </option>
-              <option value="clothing">Clothing</option>
-              <option value="accessories">Accessories</option>
-              <option value="electronics">Gadgets</option>
-              <option value="electronics">Swag</option>
-
-              {categories.map((cat) => (
-                <option key={cat._id} value={cat.name}>
-                  {cat.name}
-                </option>
-              ))}
-            </select> */}
+              <option value="Gadgets">Gadgets</option>
+              <option value="Clothing">Clothing</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Swag">Swag</option>
+            </select>
 
             <label className="block">Image</label>
             <input type="file" onChange={handleImageChange} />

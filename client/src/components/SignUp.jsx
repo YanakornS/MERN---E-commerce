@@ -1,9 +1,10 @@
 import { FaGoogle, FaGithub, FaFacebook } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/Authcontext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
+import UserService from "../services/user.service";
 
 const SignUp = ({ isLogin }) => {
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ const SignUp = ({ isLogin }) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const onSubmit = (data) => {
     if (isLogin) {
       // Login logic
@@ -45,9 +45,10 @@ const SignUp = ({ isLogin }) => {
     } else {
       // Register logic
       createUser(data.email, data.password)
-        .then((result) => {
+        .then(async (result) => {
           const user = result.user;
           console.log(user);
+          await UserService.addUser(user.email);
           Swal.fire({
             title: "Registration Successful",
             text: "You have registered successfully!",
@@ -61,8 +62,8 @@ const SignUp = ({ isLogin }) => {
         .catch((err) => {
           console.error(err);
           Swal.fire({
-             title: "Access Denied",
-          text: "Only emails ending with @webmail.npru.ac.th are allowed!",
+            title: "Registration Failed",
+            text: "An error occurred during registration.",
             icon: "error",
           });
         });
@@ -71,8 +72,9 @@ const SignUp = ({ isLogin }) => {
 
   const googleSignup = () => {
     signUpWithGoogle()
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
+        await UserService.addUser(user.email);
         Swal.fire({
           title: "Registration Successful",
           text: "You have registered successfully with Google!",
@@ -86,13 +88,12 @@ const SignUp = ({ isLogin }) => {
       .catch((err) => {
         console.error(err);
         Swal.fire({
-          title: "Access Denied",
-          text: "Only emails ending with @webmail.npru.ac.th are allowed!",
+          title: "Registration Failed",
+          text: "An error occurred during registration.",
           icon: "error",
         });
       });
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">

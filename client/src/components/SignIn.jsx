@@ -1,15 +1,12 @@
-import { useForm } from "react-hook-form";
-import { FaGoogle, FaGithub, FaFacebook } from "react-icons/fa";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import Swal from "sweetalert2";
-import { useNavigate, useLocation } from "react-router";
+import { useCookies } from "react-cookie";
 
 const SignIn = () => {
   const { login, signUpWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from?.pathname || "/";
+
+  const [cookies, setCookie] = useCookies(["token"]);
 
   const {
     register,
@@ -22,13 +19,18 @@ const SignIn = () => {
       .then((result) => {
         const user = result.user;
         console.log("User signed in:", user);
-        Swal.fire({
-          icon: "success",
-          title: "Signin Successful",
-          showConfirmButton: false,
-          timer: 1500,
+        // Get the token from Firebase
+        user.getIdToken().then((token) => {
+          // Set the token in cookies
+          setCookie("token", token); // expires in 1 hour
+          Swal.fire({
+            icon: "success",
+            title: "Signin Successful",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          navigate(from, { replace: true });
         });
-        navigate(from, { replace: true });
       })
       .catch((error) => {
         console.error("Signin failed:", error.message);
@@ -39,6 +41,7 @@ const SignIn = () => {
         });
       });
   };
+
   const googleSignup = () => {
     signUpWithGoogle()
       .then((result) => {

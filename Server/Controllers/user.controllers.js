@@ -1,73 +1,55 @@
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const UserModel = require("../Models/User");
-const salt = bcrypt.genSaltSync(10);
+const UserModel = require("../Models/user.model");
+
 const SECRET = process.env.SECRET;
 
-exports.login = async (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res.status(400).send({
-      message: "Please provide all required fields",
-    });
+exports.sign = async (req, res) => {
+  const { email, role } = req.body;
+  //check email is existing in db
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
   }
 
-  try {
-    const user = await UserModel.findOne({ username });
-    if (!user) {
-      return res.status(404).send({
-        message: "User not found",
-      });
-    }
-
-    const isPasswordValid = bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).send({
-        message: "Invalid password",
-      });
-    }
-
-    const token = jwt.sign({ id: user._id, username: user.username }, SECRET, {
-      expiresIn: "1h",
-    });
-
-    return res.send({
-      message: "Login successful",
-      user: {
-        id: user._id,
-        username: user.username,
-      },
-      accessToken: token,
-    });
-  } catch (error) {
-    return res.status(500).send({
-      message: error.message || "Internal Server Error:Authentication Failed",
-    });
-  }
+  //sign jwt token
+  const token = jwt.sign({ email: user.email, role: user.role }, SECRET, {
+    expiresIn: "1h",
+  });
+  const userInfo = {
+    email: user.email,
+    role: user.role,
+  };
+  res.status(200).json({ token, userInfo });
 };
 
-exports.register = async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    res.status(400).send({
-      message: "Please provide all requried fields",
-    });
-    return;
-  }
+//Add User
+exports.addUser = async (req, res) => {
   try {
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    const user = await UserModel.create({ username, password: hashedPassword });
-    res.send({
-      message: "User registered successfully",
-      user,
-    });
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email are required" });
+    }
+
+    // ตรวจสอบว่าผู้ใช้มีอยู่แล้วหรือไม่
+    const existedUser = await UserModel.findOne({ email });
+    if (existedUser) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
+    // สร้างผู้ใช้ใหม่
+    const newUser = new UserModel({ email });
+    await newUser.save();
+
+    res.status(201).json({ message: "User added successfully" });
   } catch (error) {
-    res.status(500).send({
-      message:
-        error.message ||
-        "Something error occurred while registering a new user",
+    res.status(500).json({
+      message: "Something error occurred while adding a new user",
+      error: error.message,
     });
   }
 };
