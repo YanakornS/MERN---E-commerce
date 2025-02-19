@@ -1,7 +1,7 @@
 import { FaGoogle, FaGithub, FaFacebook } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/Authcontext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
 

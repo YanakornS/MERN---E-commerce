@@ -10,6 +10,7 @@ import {
   GithubAuthProvider,
   FacebookAuthProvider,
   getAuth,
+  
   updateProfile as firebaseUpdateProfile,
 } from "firebase/auth";
 import { Cookies } from "react-cookie";
@@ -23,18 +24,19 @@ const AuthProvider = ({ children }) => {
   const cookies = new Cookies();
   const auth = getAuth(app);
 
-  const createUser = (email) => {
-    return createUserWithEmailAndPassword(auth, email);
+  const createUser = (email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
-  };
+};
 
-  const getUser = () => {
-    const userInfo = cookies.get("user") || null;
-    return userInfo;
-  };
+
+const getUser = () => {
+  const userInfo = cookies.get("UserInfo") || null;
+  return userInfo;
+};
   const logout = () => {
     return signOut(auth);
   };
@@ -121,7 +123,7 @@ const AuthProvider = ({ children }) => {
     getUser,
     login,
     logout,
-
+    getToken,
     isLoading,
     signUpWithGoogle,
     signUpWithGithub,
@@ -138,11 +140,13 @@ const AuthProvider = ({ children }) => {
           cookies.set("Token", data.token);
           cookies.set("UserInfo", data.userInfo);
         } else {
-          cookies.remove("user");
+          cookies.remove("UserInfo");
+          cookies.remove("Token");
         }
       } else {
         setUser(null);
-        cookies.remove("user");
+        cookies.remove("UserInfo");
+        cookies.remove("Token");
       }
       setIsLoading(false);
     });

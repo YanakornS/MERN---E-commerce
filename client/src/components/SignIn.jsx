@@ -1,4 +1,11 @@
 import { useCookies } from "react-cookie";
+import { FaGoogle, FaGithub, FaFacebook } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { AuthContext } from "../context/Authcontext";
+import Swal from "sweetalert2";
+import { useNavigate, useLocation } from "react-router";
+import UserService from "../services/user.service";
 
 const SignIn = () => {
   const { login, signUpWithGoogle } = useContext(AuthContext);
@@ -19,6 +26,7 @@ const SignIn = () => {
       .then((result) => {
         const user = result.user;
         console.log("User signed in:", user);
+       
         // Get the token from Firebase
         user.getIdToken().then((token) => {
           // Set the token in cookies
