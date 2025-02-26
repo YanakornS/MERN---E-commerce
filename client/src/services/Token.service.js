@@ -3,7 +3,12 @@ const cookies = new Cookies();
 
 const getLocalAccessToken = () => {
   const user = getUser();
-  return user?.accessToken;
+  return user?.token;
+};
+const getToken = () => {
+  const token = cookies.get("Token");
+  console.log("Token:", token);
+  return token;
 };
 
 const getUser = () => {
@@ -26,6 +31,7 @@ const TokenService = {
   setUser,
   getUser,
   removeUser,
+  getToken,
 };
 
 export default TokenService;

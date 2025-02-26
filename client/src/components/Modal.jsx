@@ -23,26 +23,53 @@ const Modal = ({ name }) => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    if (name === "login") {
-      login(data.email, data.password)
-        .then((result) => {
-          const user = result.user;
-          console.log(user);
-          document.getElementById(name).close();
-          Swal.fire({
-            title: "Login",
-            text: "login successfully You " + user.email,
-            icon: "success",
-            timer: 1500,
-            showConfirmButton: false,
-          }).then(() => {
-            navigate(from);
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+    login(data.email, data.password)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          showConfirmButton: false,
+          timer: 1500,
         });
-    }
+        document.getElementById("login").close();
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        console.error("Login failed:", error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: error.message,
+          showConfirmButton: true,
+        });
+      });
+  };
+  const googleSignUp = () => {
+    signUpWithGoogle()
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        Swal.fire({
+          icon: "success",
+          title: "Signup Successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        document.getElementById("login").close();
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        console.error("Signup failed:", error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Signup Failed",
+          text: error.message,
+          showConfirmButton: true,
+        });
+      });
   };
 
   const GitHubSignup = () => {
@@ -195,7 +222,7 @@ const Modal = ({ name }) => {
 
             {/* Providers icon */}
             <div className="space-x-3 mt-3 flex justify-center items-center">
-              <button className="btn rounded-full" onClick={googleSignup}>
+              <button className="btn rounded-full" onClick={googleSignUp}>
                 <FaGoogle className="size-4" />
               </button>
               <button className="btn rounded-full" onClick={facebookSignup}>

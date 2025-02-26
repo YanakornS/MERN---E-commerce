@@ -1,28 +1,43 @@
 import { useEffect, useState } from "react";
 import UserService from "../../services/user.service";
 import Swal from "sweetalert2";
-import { FaUser, FaUserShield } from "react-icons/fa";
+import { FaUser, FaUserShield, FaEdit, FaTrash } from "react-icons/fa";
 
 const AllUser = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState("");
 
   useEffect(() => {
-    fetchUsers();
+    (async () => {
+      setLoading(true);
+      try {
+        const res = await UserService.getAllUsers();
+        setUsers(res.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+      setLoading(false);
+    })();
   }, []);
 
-  const fetchUsers = async () => {
-    try {
-      const res = await UserService.getAllUsers();
+  const handleToggleRole = async (user) => {
+    const newRole = user.role === "admin" ? "user" : "admin";
 
-      setUsers(res.data);
-      setLoading(false);
+    try {
+      await UserService.updateUser(user._id, {
+        email: user.email,
+        role: newRole,
+      });
+      setUsers((prevUsers) =>
+        prevUsers.map((u) => (u._id === user._id ? { ...u, role: newRole } : u))
+      );
+
+      Swal.fire("Updated!", `User role changed to ${newRole}.`, "success");
     } catch (error) {
-      console.error("Error fetching users:", error);
-      setLoading(false);
+      console.error("Error updating user role:", error);
+      Swal.fire("Error!", "Failed to update user role.", "error");
     }
   };
 
@@ -31,24 +46,22 @@ const AllUser = () => {
     setNewRole(user.role);
     document.getElementById("editUserModal").showModal();
   };
+
   const handleUpdateRole = async () => {
     if (!selectedUser) return;
     try {
-      await UserService.updateUserRole(selectedUser.email, newRole);
+      await UserService.updateUser(selectedUser._id, {
+        email: selectedUser.email,
+        role: newRole,
+      });
+
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user.email === selectedUser.email ? { ...user, role: newRole } : user
+          user._id === selectedUser._id ? { ...user, role: newRole } : user
         )
       );
 
-      Swal.fire({
-        title: "Updated!",
-        text: "User role has been updated.",
-        icon: "success",
-        timer: 1500,
-        showConfirmButton: false,
-      });
-
+      Swal.fire("Updated!", "User role has been updated.", "success");
       document.getElementById("editUserModal").close();
     } catch (error) {
       console.error("Error updating user role:", error);
@@ -56,7 +69,8 @@ const AllUser = () => {
     }
   };
 
-  const handleDeleteUser = async (email) => {
+  const handleDeleteUser = async (id) => {
+    console.log("Deleting user with ID:", id);
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -69,16 +83,10 @@ const AllUser = () => {
       });
 
       if (result.isConfirmed) {
-        await UserService.deleteUser(email);
-        setUsers(users.filter((user) => user.email !== email));
+        await UserService.deleteUser(id);
+        setUsers(users.filter((user) => user._id !== id));
 
-        Swal.fire({
-          title: "Deleted!",
-          text: "User has been deleted successfully.",
-          icon: "success",
-          timer: 1500,
-          showConfirmButton: false,
-        });
+        Swal.fire("Deleted!", "User has been deleted successfully.", "success");
       }
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -86,22 +94,27 @@ const AllUser = () => {
     }
   };
 
+  const changeRole = (email, role) => {
+    UserService.getRoleByEmail(email).then((res) => {
+      const role = res.data.role;
+      if (role === "admin") {
+        UserService.makeUser(email).then((res) => {
+          setUsers(user.map());
+        });
+      }
+    });
+  };
+
   return (
     <div className="container mx-auto p-5">
       <h2 className="text-2xl font-bold text-center mb-6">All Users</h2>
 
-      {/* Search Box */}
-      <div className="flex justify-end mb-5">
-        <input
-          type="text"
-          placeholder="Search users..."
-          className="input input-bordered w-full max-w-sm"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className=" mb-4">
+        <span className="text-lg  font-semibold">
+          Total Users: {users.length}
+        </span>
       </div>
 
-      {/* User Table */}
       <div className="overflow-x-auto">
         <table className="table-auto w-full border-collapse border border-gray-200">
           <thead>
@@ -109,7 +122,7 @@ const AllUser = () => {
               <th className="p-2 border">#</th>
               <th className="p-2 border">Email</th>
               <th className="p-2 border">Role</th>
-              <th className="p-2 border">Registered At</th>
+
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
@@ -121,52 +134,53 @@ const AllUser = () => {
                 </td>
               </tr>
             ) : (
-              users
-                .filter((user) => user.email.includes(search))
-                .map((user, index) => (
-                  <tr key={user.email} className="border">
-                    <td className="p-2 text-center">{index + 1}</td>
-                    <td className="p-2">{user.email}</td>
-                    <td className="p-3 text-center">
-                      <span
-                        className={`px-4 py-2 text-xs font-bold rounded-md flex items-center justify-center w-24 ${
-                          user.role === "admin"
-                            ? "bg-purple-600 text-white"
-                            : "bg-blue-500 text-white"
-                        }`}
-                      >
-                        {user.role === "admin" ? (
-                          <FaUserShield className="mr-1" />
-                        ) : (
-                          <FaUser className="mr-1" />
-                        )}
-                        {user.role}
+              users.map((user, index) => (
+                <tr key={user._id} className="border">
+                  <td className="p-2 text-center">{index + 1}</td>
+                  <td className="p-2">{user.email}</td>
+
+                  <td className="p-3 text-center">
+                    <div className="flex items-center justify-center">
+                      <span className="text-sm font-bold mr-2 text-gray-700">
+                        User
                       </span>
-                    </td>
-                    <td className="p-2 text-center">
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="p-2 text-center">
-                      <button
-                        className="btn btn-sm btn-warning mr-2"
-                        onClick={() => openEditModal(user)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-sm btn-error"
-                        onClick={() => handleDeleteUser(user.email)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          checked={user.role === "admin"}
+                          onChange={() => handleToggleRole(user)}
+                        />
+                        <div className="w-11 h-6 bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      </label>
+                      <span className="text-sm font-bold ml-2 text-gray-700">
+                        Admin
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="p-2 text-center">
+                    <button
+                      className="btn btn-sm btn-warning mr-2"
+                      onClick={() => openEditModal(user)}
+                    >
+                      <FaEdit className="mr-1" /> Edit
+                    </button>
+                    <button
+                      className="btn btn-sm btn-error"
+                      onClick={() => handleDeleteUser(user._id)}
+                    >
+                      <FaTrash className="mr-1" /> Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>
       </div>
 
+      {/* Modal สำหรับแก้ไข Role */}
       <dialog id="editUserModal" className="modal">
         <div className="modal-box">
           <h3 className="text-lg font-bold">Edit User Role</h3>

@@ -1,12 +1,26 @@
 import axios from "axios";
+import TokenService from "./Token.service";
+
 const baseURL = import.meta.env.VITE_API_URL;
 
-console.log(baseURL);
-const api = axios.create({
+const instance = axios.create({
   baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
   },
 });
+instance.interceptors.request.use(
+  (config) => {
+    const token = TokenService.getToken();
+    console.log("Token:", token);
+    if (token) {
+      config.headers["x-access-token"] = token;
+    }
 
-export default api;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+export default instance;
