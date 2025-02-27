@@ -10,6 +10,7 @@ const cartRouter = require("./routers/cart.router");
 const swaggerDocument = require("./docs/swagger-output.json");
 const userRouter = require("./routers/user.router");
 const productRouter = require("./routers/product.router");
+const stripeRouter = require("./routers/stripe.router");
 const path = require("path");
 try {
   mongoose.connect(DB_URL);
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/stripe", stripeRouter);
 
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 

@@ -139,11 +139,9 @@ const AllUser = () => {
                   <td className="p-2 text-center">{index + 1}</td>
                   <td className="p-2">{user.email}</td>
 
+                  {/* Toggle Role (แสดงเฉพาะ Role ที่กำลังใช้งาน) */}
                   <td className="p-3 text-center">
                     <div className="flex items-center justify-center">
-                      <span className="text-sm font-bold mr-2 text-gray-700">
-                        User
-                      </span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -151,10 +149,10 @@ const AllUser = () => {
                           checked={user.role === "admin"}
                           onChange={() => handleToggleRole(user)}
                         />
-                        <div className="w-11 h-6 bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <div className="w-14 h-7 bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
                       </label>
-                      <span className="text-sm font-bold ml-2 text-gray-700">
-                        Admin
+                      <span className="ml-3 text-sm font-bold text-gray-700">
+                        {user.role === "admin" ? "Admin" : "User"}
                       </span>
                     </div>
                   </td>

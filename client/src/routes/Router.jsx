@@ -28,6 +28,8 @@ const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
 const ManageItems = lazy(() => import("../pages/ManageItems/index"));
 const AdminRoute = lazy(() => import("../pages/ProtectPage/AdminRouter"));
 const AllUser = lazy(() => import("../pages/Dashboard/AllUser"));
+const CheckOutSuccess = lazy(() => import("../pages/CheckOutSuccess/index"));
+const ManageOrders = lazy(() => import("../pages/ManageOrders/ManageOrders"));
 
 const router = createBrowserRouter([
   {
@@ -78,6 +80,10 @@ const router = createBrowserRouter([
         path: "/drawer",
         element: <Drawer />,
       },
+      {
+        path: "checkout-success",
+        element: <CheckOutSuccess />,
+      },
     ],
   },
   {
@@ -101,9 +107,13 @@ const router = createBrowserRouter([
         element: <ManageItems />,
       },
       {
-        path:"AllUsers",
-        element:<AllUser/>
-      }
+        path: "AllUsers",
+        element: <AllUser />,
+      },
+      {
+        path: "ManageOrders",
+        element: <ManageOrders />,
+      },
     ],
   },
 ]);

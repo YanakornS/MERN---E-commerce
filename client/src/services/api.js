@@ -12,7 +12,6 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const token = TokenService.getToken();
-    console.log("Token:", token);
     if (token) {
       config.headers["x-access-token"] = token;
     }

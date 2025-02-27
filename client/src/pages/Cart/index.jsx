@@ -4,6 +4,7 @@ import { FaTrash } from "react-icons/fa";
 import CartService from "../../services/cart.service";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContext";
+import PaymentButton from "../../components/PaymentButton";
 
 const Index = () => {
   const [cart, refetch] = useCart();
@@ -241,12 +242,14 @@ const Index = () => {
                 <h3 className="text-lg font-semibold">Shopping Details</h3>
                 <p className="">Total Items : {cart.length}</p>
                 <p className="">Total Price : {formattedTotalPrice}</p>
-                <a
+
+                <PaymentButton cartItems={cart} />
+                {/* <a
                   href="/check-out"
                   className="btn btn-md bg-red text-white px-8 py-1"
                 >
                   Proceed to checkout
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

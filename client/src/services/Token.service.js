@@ -7,7 +7,7 @@ const getLocalAccessToken = () => {
 };
 const getToken = () => {
   const token = cookies.get("Token");
-  console.log("Token:", token);
+
   return token;
 };
 
