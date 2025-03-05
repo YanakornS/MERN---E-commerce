@@ -11,6 +11,7 @@ const swaggerDocument = require("./docs/swagger-output.json");
 const userRouter = require("./routers/user.router");
 const productRouter = require("./routers/product.router");
 const stripeRouter = require("./routers/stripe.router");
+const orderRouter = require("./routers/order.router");
 const path = require("path");
 try {
   mongoose.connect(DB_URL);
@@ -22,6 +23,10 @@ try {
 const app = express();
 
 app.use(cors({ origin: BASE_URL, credentials: true }));
+
+//stripe webhook must raw body
+//ถ้าstripeอะปกติถ้าใช้ล่างเเต่ถ้าเป็น  stripe/webhook มันจะรอ
+app.use("/api/v1/stripe/webhook", express.raw({ type: "application/json" }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
 
@@ -33,6 +38,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/stripe", stripeRouter);
+app.use("/api/v1/order", orderRouter);
 
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 

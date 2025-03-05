@@ -1,0 +1,8 @@
+ตั้นตอนการใช้ Web Hook Stripe 
+
+เริ่มจากการดาวโหลด  Stripe.exe เเละ Cd เข้าไป เเละเรื่มะมคำสั่งเเรก stripe.exe login
+
+เเละก็ ใช้คำสั่ง stripe.exe listen --forward-to localhost:5000/api/v1/stripe/webhook เพื่อที่จะได้ Key มาใส่ env 
+เเละก็ต้องเปิด  stripe.exe trigger  checkout.session.completed ค้างไว้
+
+เปิดทิ้งไว้ทั้ง 2 ตัว 
