@@ -1,146 +1,137 @@
 import { useEffect, useState } from "react";
-// import OrderService from "../../services/order.service";
+import OrderService from "../../services/order.service";
 import Swal from "sweetalert2";
+import { MdDelete, MdVisibility } from "react-icons/md";
+import { FaEye } from "react-icons/fa";
+import OrderDetailsModal from "./OrderDetailsModal";
 
 const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     fetchOrders();
   }, []);
 
   const fetchOrders = async () => {
-    setLoading(true);
     try {
-      const res = await OrderService.getAllOrders();
-      setOrders(res.data);
+      const response = await OrderService.getAllOrders();
+      setOrders(response.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
-    }
-    setLoading(false);
-  };
-
-  const handleUpdateStatus = async (orderId, newStatus) => {
-    try {
-      await OrderService.updateOrderStatus(orderId, newStatus);
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order
-        )
-      );
-
-      Swal.fire("Updated!", "Order status has been updated.", "success");
-    } catch (error) {
-      console.error("Error updating order status:", error);
-      Swal.fire("Error!", "Failed to update order status.", "error");
     }
   };
 
   const handleDeleteOrder = async (orderId) => {
-    try {
-      const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "This order will be permanently deleted!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Yes, delete it!",
-      });
-
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        await OrderService.deleteOrder(orderId);
-        setOrders(orders.filter((order) => order._id !== orderId));
-
-        Swal.fire(
-          "Deleted!",
-          "Order has been deleted successfully.",
-          "success"
-        );
+        try {
+          await OrderService.deleteOrder(orderId);
+          setOrders((prevOrders) =>
+            prevOrders.filter((order) => order._id !== orderId)
+          );
+          Swal.fire("Deleted!", "The order has been deleted.", "success");
+        } catch (error) {
+          console.error("Error deleting order:", error);
+          Swal.fire("Error!", "Failed to delete the order.", "error");
+        }
       }
-    } catch (error) {
-      console.error("Error deleting order:", error);
-      Swal.fire("Error!", "Failed to delete order.", "error");
-    }
+    });
   };
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      order._id.includes(search) ||
-      order.customerEmail.includes(search) ||
-      (filterStatus ? order.status === filterStatus : true)
-  );
+  console.log("Orders:", orders);
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `Do you want to change the order status to "${newStatus}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, update it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await OrderService.updateOrderDetail(orderId, newStatus);
+          setOrders((prevOrders) =>
+            prevOrders.map((order) =>
+              order._id === orderId
+                ? { ...order, delivery_status: newStatus }
+                : order
+            )
+          );
+          Swal.fire("Updated!", "Order status has been updated.", "success");
+        } catch (error) {
+          console.error("Error updating status:", error);
+          Swal.fire("Error!", "Failed to update status.", "error");
+        }
+      }
+    });
+  };
+  const openOrderDetails = (order) => {
+    setSelectedOrder(order);
+    document.getElementById("orderDetailsModal").showModal();
+  };
 
   return (
-    <div className="container mx-auto p-5">
-      <h2 className="text-2xl font-bold text-center mb-6">Manage Orders</h2>
+    <div className="container mx-auto p-6">
+      <h2 className="text-3xl font-bold text-center mb-6">Manage Orders</h2>
 
-      <div className="flex justify-between mb-5">
-        {/* Search Box */}
-        <input
-          type="text"
-          placeholder="Search by Order ID or Email..."
-          className="input input-bordered w-full max-w-sm"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        {/* Filter Dropdown */}
-        <select
-          className="select select-bordered"
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-        >
-          <option value="">All Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Processing">Processing</option>
-          <option value="Shipped">Shipped</option>
-          <option value="Delivered">Delivered</option>
-        </select>
-      </div>
-
-      {/* Orders Table */}
       <div className="overflow-x-auto">
-        <table className="table-auto w-full border-collapse border border-gray-200">
+        <table className="table-auto w-full border-collapse border border-gray-300 shadow-lg">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">Order ID</th>
-              <th className="p-2 border">Customer Email</th>
-              <th className="p-2 border">Total Price (THB)</th>
-              <th className="p-2 border">Status</th>
-              <th className="p-2 border">Actions</th>
+            <tr className="bg-maroon-700 text-white">
+              <th className="p-3 border text-black">OrderId</th>
+              <th className="p-3 border text-black">Email</th>
+              <th className="p-3 border text-black">Total</th>
+              <th className="p-3 border text-black">Payment Status</th>
+              <th className="p-3 border text-black">Delivery Status</th>
+              <th className="p-3 border text-black">Action</th>
             </tr>
           </thead>
           <tbody>
-            {loading ? (
+            {orders.length === 0 ? (
               <tr>
-                <td colSpan="5" className="text-center p-4">
-                  Loading...
-                </td>
-              </tr>
-            ) : filteredOrders.length === 0 ? (
-              <tr>
-                <td colSpan="5" className="text-center p-4">
+                <td colSpan="6" className="text-center p-3">
                   No orders found
                 </td>
               </tr>
             ) : (
-              filteredOrders.map((order) => (
-                <tr key={order._id} className="border">
-                  <td className="p-2 text-center">{order._id}</td>
-                  <td className="p-2">{order.customerEmail}</td>
-                  <td className="p-2 text-center">{order.totalPrice} THB</td>
-
-                  {/* Order Status Dropdown */}
-                  <td className="p-2 text-center">
+              orders.map((order) => (
+                <tr key={order._id} className="text-center">
+                  <td className="p-3 border">
+                    {order._id.slice(0, 3)} ... {order._id.slice(-3)}
+                  </td>
+                  <td className="p-3 border">{order.email}</td>
+                  <td className="p-3 border">
+                    {order.total.toLocaleString()} THB
+                  </td>
+                  <td className="p-3 border">
+                    <span
+                      className={`px-3 py-1 rounded-full text-white ${
+                        order.payment_status === "paid"
+                          ? "bg-green-500"
+                          : "bg-red-500"
+                      }`}
+                    >
+                      {order.payment_status === "paid" ? "Paid" : "Unpaid"}
+                    </span>
+                  </td>
+                  <td className="p-3 border">
                     <select
-                      className="select select-bordered"
-                      value={order.status}
+                      className="border p-2 rounded"
+                      value={order.delivery_status}
                       onChange={(e) =>
-                        handleUpdateStatus(order._id, e.target.value)
+                        handleStatusChange(order._id, e.target.value)
                       }
                     >
                       <option value="Pending">Pending</option>
@@ -149,13 +140,19 @@ const ManageOrders = () => {
                       <option value="Delivered">Delivered</option>
                     </select>
                   </td>
-
-                  <td className="p-2 text-center">
+                  <td className="p-3 border flex justify-center space-x-2">
                     <button
-                      className="btn btn-sm btn-error"
+                      className="bg-success text-white p-3 rounded-full"
+                      onClick={() => openOrderDetails(order)}
+                    >
+                      <FaEye />
+                    </button>
+                    <button
+                      className="bg-red text-white p-2 rounded-full"
+                      title="Delete Order"
                       onClick={() => handleDeleteOrder(order._id)}
                     >
-                      Delete
+                      <MdDelete size={20} />
                     </button>
                   </td>
                 </tr>
@@ -164,6 +161,7 @@ const ManageOrders = () => {
           </tbody>
         </table>
       </div>
+      <OrderDetailsModal name="orderDetailsModal" order={selectedOrder} />
     </div>
   );
 };
