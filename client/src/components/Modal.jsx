@@ -36,6 +36,10 @@ const Modal = ({ name }) => {
         });
         document.getElementById("login").close();
         navigate(from, { replace: true });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      
       })
       .catch((error) => {
         console.error("Login failed:", error.message);
@@ -59,7 +63,11 @@ const Modal = ({ name }) => {
           timer: 1500,
         });
         document.getElementById("login").close();
+ 
         navigate(from, { replace: true });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       })
       .catch((error) => {
         console.error("Signup failed:", error.message);
@@ -70,6 +78,7 @@ const Modal = ({ name }) => {
           showConfirmButton: true,
         });
       });
+      
   };
 
   const GitHubSignup = () => {
@@ -83,8 +92,9 @@ const Modal = ({ name }) => {
           icon: "success",
           timer: 1500,
           showConfirmButton: false,
-        }).then(() => {
+        }).then(() => {          
           navigate(from); // Navigate to the original page or home
+        
         });
       })
       .catch((err) => {

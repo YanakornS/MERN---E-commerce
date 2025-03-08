@@ -98,31 +98,40 @@ const clearCart = async (email) => {
 };
 
 // ฟังก์ชันสร้างคำสั่งซื้อ
-const createOrder = async (customer, data) => {
+const createOrder = async (customer, data, status = "completed", res) => {
   try {
     const products = JSON.parse(customer.metadata.cart);
+    const subtotal = (data.amount_subtotal ?? data.amount ?? 0) / 100;
+    const total = (data.amount_total ?? data.amount ?? 0) / 100;
+    const shipping = data.customer_details || data.shipping || { address: {} };
+
+
     console.log("Products:", products);
 
     const newOrder = await OrderModel.create({
       email: customer.metadata.email,
       customerId: data.customer,
       products: products,
-      subtotal: data.amount_subtotal,
-      total: data.amount_total / 100,
-      shipping: data.customer_details,
+      subtotal: subtotal,
+      total: total ,
+      shipping: shipping,
       payment_status: data.payment_status,
+      delivery_status: status === "completed" ? "pending" : "canceled",
     });
 
     console.log("Order Created:", newOrder);
     await clearCart(customer.metadata.email);
   } catch (error) {
-    res.status(500).json({
-      message: error.message || "Something error occurred white  Create Order",
-    });
+    console.error("Error creating order:", error.message);
+    if (res) {
+      return res.status(500).json({
+        message: error.message || "Something error occurred while creating order",
+      });
+    }
   }
 };
 
-// Webhook สำหรับจัดการ Checkout Completed
+
 exports.webhook = async (req, res) => {
   console.log("Webhook triggered...");
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -136,20 +145,34 @@ exports.webhook = async (req, res) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+ 
+  console.log("Stripe Event:", JSON.stringify(event, null, 2));
+
+  const data = event.data?.object; 
+  console.log("Stripe Data Object:", data);
+
   switch (event.type) {
     case "checkout.session.completed":
       console.log("Payment received.");
-      const data = event.data.object;
+      try {
+        const customer = await stripe.customers.retrieve(data.customer);
+        await createOrder(customer, data, "completed", res);
+      } catch (error) {
+        console.error("Error creating order:", error.message);
+        return res.status(500).json({ message: "Webhook Error" });
+      }
+      break;
 
-      stripe.customers.retrieve(data.customer).then(async (customer) => {
-        try {
-          await createOrder(customer, data);
-        } catch (error) {
-          res.status(500).json({
-            message: error.message || "webhook Error",
-          });
-        }
-      });
+      case "payment_intent.payment_failed":
+      console.log(" Payment failed:");
+      console.log("Stripe Data:", JSON.stringify(data, null, 2));    
+      try {
+        const customer = await stripe.customers.retrieve(data.customer);
+        await createOrder(customer, data, "failed", res);
+      } catch (error) {
+        console.error("Error processing failed payment:", error.message);
+        return res.status(500).json({ message: "Webhook Error" });
+      }
       break;
 
     default:

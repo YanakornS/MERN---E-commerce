@@ -1,17 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import OrderService from "../../services/order.service";
 import Swal from "sweetalert2";
-import { MdDelete, MdVisibility } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
 import OrderDetailsModal from "./OrderDetailsModal";
 
 const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const modalRef = useRef(null);
 
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  useEffect(() => {
+    if (selectedOrder && modalRef.current) {
+      modalRef.current.showModal(); 
+    }
+  }, [selectedOrder]);
 
   const fetchOrders = async () => {
     try {
@@ -47,8 +54,6 @@ const ManageOrders = () => {
     });
   };
 
-  console.log("Orders:", orders);
-
   const handleStatusChange = async (orderId, newStatus) => {
     Swal.fire({
       title: "Are you sure?",
@@ -77,62 +82,67 @@ const ManageOrders = () => {
       }
     });
   };
+
   const openOrderDetails = (order) => {
     setSelectedOrder(order);
-    document.getElementById("orderDetailsModal").showModal();
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-3xl font-bold text-center mb-6">Manage Orders</h2>
-
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full border-collapse border border-gray-300 shadow-lg">
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl md:text-3xl font-bold text-center mb-4 text-gray-800">
+        Manage Orders
+      </h2>
+      <span className="text-lg  font-semibold " > Total Oders: {orders.length} </span> 
+      <div className="overflow-x-auto mt-2 bg-white shadow-md rounded-lg">
+        <table className="table-auto w-full border-collapse">
           <thead>
-            <tr className="bg-maroon-700 text-white">
-              <th className="p-3 border text-black">OrderId</th>
-              <th className="p-3 border text-black">Email</th>
-              <th className="p-3 border text-black">Total</th>
-              <th className="p-3 border text-black">Payment Status</th>
-              <th className="p-3 border text-black">Delivery Status</th>
-              <th className="p-3 border text-black">Action</th>
+            <tr className="bg-gradient-to-r from-red-800 to-red-600 text-black text-xs sm:text-sm md:text-base">
+              <th className="p-3 border">OrderId</th>
+              <th className="p-3 border  sm:table-cell">Email</th>
+              <th className="p-3 border">Total</th>
+              <th className="p-3 border">Payment</th>
+              <th className="p-3 border hidden md:table-cell">Delivery</th>
+              <th className="p-3 border">Action</th>
             </tr>
           </thead>
           <tbody>
             {orders.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center p-3">
+                <td colSpan="6" className="text-center p-6 text-gray-500">
                   No orders found
                 </td>
               </tr>
             ) : (
               orders.map((order) => (
-                <tr key={order._id} className="text-center">
-                  <td className="p-3 border">
-                    {order._id.slice(0, 3)} ... {order._id.slice(-3)}
+                <tr
+                  key={order._id}
+                  className="text-center border-b text-xs sm:text-sm md:text-base hover:bg-gray-100"
+                >
+                  <td className="p-2 font-medium text-black">
+                    {order._id.slice(0, 4)}...{order._id.slice(-4)}
                   </td>
-                  <td className="p-3 border">{order.email}</td>
-                  <td className="p-3 border">
-                    {order.total.toLocaleString()} THB
+                  <td className="p-2 text-black hidden sm:table-cell">
+                    {order.email}
                   </td>
-                  <td className="p-3 border">
+                  <td className="p-2 font-semibold text-gray-800">
+                    ฿{order.total.toLocaleString()}
+                  </td>
+                  <td className="p-2">
                     <span
-                      className={`px-3 py-1 rounded-full text-white ${
+                      className={`px-2 py-1 font-semibold rounded-full ${
                         order.payment_status === "paid"
-                          ? "bg-green-500"
-                          : "bg-red-500"
+                          ? "bg-green-500 text-white"
+                          : "bg-rose-600 text-white"
                       }`}
                     >
                       {order.payment_status === "paid" ? "Paid" : "Unpaid"}
                     </span>
                   </td>
-                  <td className="p-3 border">
+                  <td className="p-2 hidden md:table-cell">
                     <select
-                      className="border p-2 rounded"
+                      className="border p-1 rounded-lg border-blue-300 focus:ring-2 focus:ring-red-400"
                       value={order.delivery_status}
-                      onChange={(e) =>
-                        handleStatusChange(order._id, e.target.value)
-                      }
+                      onChange={(e) => handleStatusChange(order._id, e.target.value)}
                     >
                       <option value="Pending">Pending</option>
                       <option value="Processing">Processing</option>
@@ -140,19 +150,19 @@ const ManageOrders = () => {
                       <option value="Delivered">Delivered</option>
                     </select>
                   </td>
-                  <td className="p-3 border flex justify-center space-x-2">
+                  <td className="p-2 flex justify-center space-x-2 flex-wrap">
                     <button
-                      className="bg-success text-white p-3 rounded-full"
+                      className="bg-blue-500 text-white p-2 rounded-full shadow-md transition transform hover:scale-105"
                       onClick={() => openOrderDetails(order)}
                     >
-                      <FaEye />
+                      <FaEye size={16} />
                     </button>
                     <button
-                      className="bg-red text-white p-2 rounded-full"
+                      className="bg-rose-600 text-white p-2 rounded-full shadow-md transition transform hover:scale-105"
                       title="Delete Order"
                       onClick={() => handleDeleteOrder(order._id)}
                     >
-                      <MdDelete size={20} />
+                      <MdDelete size={18} />
                     </button>
                   </td>
                 </tr>
@@ -161,7 +171,7 @@ const ManageOrders = () => {
           </tbody>
         </table>
       </div>
-      <OrderDetailsModal name="orderDetailsModal" order={selectedOrder} />
+      <OrderDetailsModal ref={modalRef} order={selectedOrder} />
     </div>
   );
 };

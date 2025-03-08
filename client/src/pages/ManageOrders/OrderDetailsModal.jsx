@@ -1,10 +1,11 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
-const OrderDetailsModal = ({ order }) => {
+const OrderDetailsModal = forwardRef(({ order }, ref) => {
   if (!order) return null;
 
   return (
     <dialog
+    ref={ref}
       id="orderDetailsModal"
       className="modal modal-bottom sm:modal-middle"
     >
@@ -76,7 +77,7 @@ const OrderDetailsModal = ({ order }) => {
               <strong>Name:</strong> {order.shipping?.name || "N/A"}
             </p>
             <p>
-              <strong>Phone:</strong> {order.shipping?.phone || "N/A"}
+              <strong>Phone:</strong> {order.shipping?.phone || "+66"}
             </p>
             <p>
               <strong>Address:</strong>{" "}
@@ -101,12 +102,13 @@ const OrderDetailsModal = ({ order }) => {
         {/* Close Button */}
         <div className="modal-action">
           <form method="dialog">
-            <button className="btn">Close</button>
+            <button className="btn bg-rose-700 hover:bg-red text-white">Close</button>
           </form>
         </div>
       </div>
     </dialog>
   );
-};
+});
+
 
 export default OrderDetailsModal;

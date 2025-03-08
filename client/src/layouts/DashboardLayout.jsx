@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Outlet, useLocation, Link } from "react-router";
+import { AuthContext } from "../context/Authcontext";
+
 import {
+  FaBars,
   FaTachometerAlt,
   FaShoppingCart,
   FaPlus,
@@ -13,6 +16,7 @@ import {
 } from "react-icons/fa";
 
 const DashboardLayout = () => {
+  const { user } = useContext(AuthContext);
   const isAdmin = true;
   const location = useLocation();
 
@@ -28,7 +32,6 @@ const DashboardLayout = () => {
   const breadcrumbs = (
     <div className="breadcrumbs text-sm mb-4">
       <ul className="flex items-center space-x-2">
-        {/* Home Icon */}
         <li className="flex items-center">
           <Link
             to="/DashboardLayout"
@@ -67,30 +70,43 @@ const DashboardLayout = () => {
 
   return (
     <div className="drawer lg:drawer-open">
-      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+      <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
+
       <div className="drawer-content flex flex-col p-6">
-        {/* ✅ Breadcrumbs แสดงตำแหน่งปัจจุบัน */}
+        {/* ปุ่ม Toggle Menu บนมือถือ (ซ้ายบน)  */}
+        <label
+          htmlFor="dashboard-drawer"
+          className=" mt-12 lg:hidden bg-blue-600 hover:bg-blue-600 border-blue-300 btn btn-sm btn-outline absolute top-4 left-4"
+        >
+          <FaBars className="text-lg text-white" />
+        </label>
+
+        {/*  Breadcrumbs แสดงตำแหน่งปัจจุบัน */}
         {breadcrumbs}
 
-        {/* ✅ เนื้อหาของแต่ละหน้า */}
+        {/*  เนื้อหาของแต่ละหน้า */}
         <Outlet />
       </div>
 
-      {/* Sidebar */}
+      {/*  Sidebar */}
       <div className="drawer-side">
         <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
         <div className="menu w-64 bg-base-200 min-h-screen p-4 shadow-lg">
-          {/* User Profile */}
           <div className="flex flex-col items-center mb-6">
             <img
               src="/LogoShop.png"
               alt="User Avatar"
               className="w-16 h-16 rounded-full border-2 border-gray-300"
             />
-            <span className="mt-2 badge badge-primary px-4 py-1">Admin</span>
+            <span className="text-black text-xl textarea-md "> ADMIN  </span>
+            <a
+              href="/profile"
+              className="mt-2 px-4 py-1 text-sm  text-black  bg-blue-400 rounded-full shadow-md"
+            >
+              @{user.displayName}
+            </a>
           </div>
 
-          {/* Admin Links */}
           <ul className="space-y-3 text-gray-700">
             <li>
               <Link
@@ -141,7 +157,6 @@ const DashboardLayout = () => {
 
           <div className="divider my-4"></div>
 
-          {/* User Links */}
           <ul className="space-y-3 text-gray-700">
             <li>
               <Link
@@ -154,7 +169,7 @@ const DashboardLayout = () => {
             </li>
             <li>
               <Link
-                to="/product"
+                to="/shop"
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-300 transition"
               >
                 <FaBox className="text-lg" />

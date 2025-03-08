@@ -1,11 +1,19 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/Authcontext";
 import useCart from "../hooks/useCart";
 
 const Profile = () => {
-  const { logout } = useContext(AuthContext);
-  const user = useContext(AuthContext).user;
+  const { user, isLoading, getUser,logout } = useContext(AuthContext);
   const [cart] = useCart();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const userInfo = getUser();
+
+  useEffect(() => {
+    if (user) {
+      console.log("User Data:", userInfo);
+      setIsAdmin(userInfo?.role === "admin"); 
+    }
+  }, [user]);
 
   return (
     <div className="flex items-center space-x-4">
@@ -45,11 +53,7 @@ const Profile = () => {
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-            <span
-              className={`badge badge-sm indicator-item ${
-                cart?.length > 0 ? "bg-red text-white" : "bg-white text-black border border-gray-400"
-              }`}
-            >
+            <span className="badge badge-sm indicator-item">
               {(cart && cart.length) || 0}
             </span>
           </div>
@@ -64,7 +68,10 @@ const Profile = () => {
           className="btn btn-ghost btn-circle avatar"
         >
           <img
-            src={user?.photoURL || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
+            src={
+              user?.photoURL ||
+              "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+            }
             alt="User Avatar"
             className="w-10 h-10 rounded-full"
           />
@@ -73,6 +80,16 @@ const Profile = () => {
           tabIndex={0}
           className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
         >
+   
+          {isAdmin && (
+            <li>
+              <a href="/dashboardLayout" className="justify-between">
+                Dashboard
+                <span className="text-blue-700 badge">ADMIN</span>
+              </a>
+            </li>
+          )}
+
           <li>
             <a href="/profile" className="justify-between">
               Profile
