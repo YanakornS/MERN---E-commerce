@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Profile from "./Profile";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/Authcontext";
 import UserIcon from "./icons/UserIcon";
 import Modal from "./Modal";
 

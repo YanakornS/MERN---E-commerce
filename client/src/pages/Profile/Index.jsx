@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { FaGoogle, FaGithub, FaFacebook, FaEdit } from "react-icons/fa";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/Authcontext";
 
 const Index = () => {
   const { user } = useContext(AuthContext);

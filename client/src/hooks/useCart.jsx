@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import CartService from "../services/cart.service";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../context/Authcontext";
 import { useContext } from "react";
 
 const useCart = () => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import UserService from "../../services/user.service";
 import Swal from "sweetalert2";
-import { FaUser, FaUserShield, FaEdit, FaTrash } from "react-icons/fa";
+import {  FaEdit, FaTrash } from "react-icons/fa";
 
 const AllUser = () => {
   const [users, setUsers] = useState([]);

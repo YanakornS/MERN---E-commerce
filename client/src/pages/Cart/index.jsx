@@ -3,7 +3,7 @@ import useCart from "../../hooks/useCart";
 import { FaTrash } from "react-icons/fa";
 import CartService from "../../services/cart.service";
 import Swal from "sweetalert2";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/Authcontext";
 import PaymentButton from "../../components/PaymentButton";
 
 const Index = () => {
