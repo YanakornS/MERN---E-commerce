@@ -98,7 +98,7 @@ const Navbar = () => {
       <div className="navbar-end">
         {user ? (
           <>
-            <span className="font-semibold pr-4">{user.displayName}</span>
+            <span className="font-semibold pr-4">{user?.displayName || "ไม่ระบุชื่อ"}</span>
             <Profile />
           </>
         ) : (
