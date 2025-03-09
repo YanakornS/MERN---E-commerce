@@ -14,7 +14,7 @@ const Productlist = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const categoryQuery = searchParams.get("category") || "all";
-  const itemsPerPageQuery = searchParams.get("itemsPerPage") || 4;
+  const itemsPerPageQuery = searchParams.get("itemsPerPage") || 8;
 
   useEffect(() => {
     setSelectedCategory(categoryQuery);

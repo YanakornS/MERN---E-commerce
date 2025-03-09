@@ -10,7 +10,7 @@ const Navbar = () => {
   const navItem = (
     <>
       <li>
-        <a href="Home">Home</a>
+        <a href="/">Home</a>
       </li>
       <li tabIndex={0}>
         <details>
@@ -26,7 +26,7 @@ const Navbar = () => {
               <a href="/shop?category=accessories">Accessories</a>
             </li>
             <li>
-              <a href="/shop?category=gadgets">Gadgets</a>
+              <a href="/shop?category=gadget">Gadgets</a>
             </li>
             <li>
               <a href="/shop?category=swag">Swag</a>

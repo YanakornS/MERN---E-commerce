@@ -194,9 +194,9 @@ const Index = () => {
                 setEditProduct({ ...editProduct, category: e.target.value })
               }
             >
-              <option value="Gadgets">Gadgets</option>
-              <option value="Clothing">Clothing</option>
-              <option value="Accessories">Accessories</option>
+              <option value="gadget">Gadgets</option>
+              <option value="clothing">Clothing</option>
+              <option value="accessories">Accessories</option>
               <option value="Swag">Swag</option>
             </select>
 
